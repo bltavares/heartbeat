@@ -1,36 +1,51 @@
-extern crate hyper;
 extern crate clap;
-
-use std::io::Read;
+extern crate hyper;
+extern crate stopwatch;
+extern crate time;
 
 use clap::{App, Arg};
+
+use stopwatch::{Stopwatch};
+use time::Duration;
 
 use hyper::Client;
 use hyper::header::Connection;
 
-fn main() {
-  let matches = App::new("heartbeat")
-      .version("v0.1.0-beta")
-      .arg(Arg::with_name("url")
-           .long("url")
-           .index(1)
-           .takes_value(true)
-           .value_name("URL")
-           .required(true))
-      .get_matches();
 
-  request(matches.value_of("url").expect("URL not present"));
+#[derive(Debug)]
+struct MeasuredResponse {
+    response: hyper::client::response::Response,
+    time: Duration,
 }
 
-fn request(url: &str) {
-    let client = Client::new();
+fn main() {
+    let matches = App::new("heartbeat")
+        .version("v0.1.0-beta")
+        .arg(Arg::with_name("url")
+             .long("url")
+             .index(1)
+             .takes_value(true)
+             .value_name("URL")
+             .required(true))
+        .get_matches();
 
-    let mut response = client.get(url)
-        .header(Connection::close())
-        .send().expect("Could not make request");
+    let measured_response = request(matches.value_of("url").expect("URL not present"));
+    println!("{:?}", measured_response);
+}
 
-    let mut body = String::new();
-    response.read_to_string(&mut body).expect("Could not read the response into a buffer");
+fn request(url: &str) -> MeasuredResponse {
+    let mut client = Client::new();
+    client.set_read_timeout(Some(std::time::Duration::from_secs(10)));
 
-    println!("Response: {}", body);
+    let request = client.get(url)
+        .header(Connection::close());
+
+    let stop_watch = Stopwatch::start_new();
+    let response = request.send().expect("Could not make request");
+    let duration = stop_watch.elapsed();
+
+    MeasuredResponse {
+        response: response,
+        time: duration,
+    }
 }
