@@ -39,6 +39,7 @@ fn main() {
     loop {
         let measured_response = request(matches.value_of("url").expect("URL not present"));
         display(&measured_response);
+        std::thread::sleep(std::time::Duration::from_secs(10));
     }
 }
 
