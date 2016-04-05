@@ -30,6 +30,11 @@ impl MeasuredResponse {
 
 const DEFAULT_INTERVAL_IN_SECONDS: u64 = 10;
 
+struct ApplicationConfiguration {
+    url: String,
+    interval: Duration,
+}
+
 fn validate_interval_argument(arg: String) -> Result<(), String> {
     match u64::from_str(&arg) {
         Ok(_) => Ok(()),
@@ -59,10 +64,15 @@ fn main() {
 
     let interval_argument = matches.value_of("interval").and_then(|arg| u64::from_str(arg).ok());
 
+    let application_configuration = ApplicationConfiguration {
+        url: matches.value_of("url").expect("URL not present").to_string(),
+        interval: Duration::from_secs(interval_argument.unwrap_or(DEFAULT_INTERVAL_IN_SECONDS)),
+    };
+
     loop {
-        let measured_response = request(matches.value_of("url").expect("URL not present"));
+        let measured_response = request(&application_configuration.url);
         display(&measured_response);
-        std::thread::sleep(std::time::Duration::from_secs(10));
+        std::thread::sleep(application_configuration.interval);
     }
 }
 
