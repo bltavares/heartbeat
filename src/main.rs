@@ -47,13 +47,12 @@ fn validate_interval_argument(arg: String) -> Result<(), String> {
 }
 
 fn main() {
-    let interval_help_message = format!("The interval in seconds between requests, default to {}",
+    let interval_help_message = format!("The interval in seconds between requests, default to {} seconds",
                                         DEFAULT_INTERVAL_IN_SECONDS);
     let matches = App::new("heartbeat")
                       .version("v0.1.0-beta")
                       .arg(Arg::with_name("url")
                                .long("url")
-                               .short("u")
                                .index(1)
                                .takes_value(true)
                                .value_name("URL")
