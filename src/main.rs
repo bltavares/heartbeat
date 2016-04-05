@@ -26,6 +26,10 @@ impl MeasuredResponse {
     fn status(&self) -> &hyper::status::StatusCode {
         &self.response.status
     }
+
+    fn url(&self) -> String {
+        self.response.url.serialize()
+    }
 }
 
 const DEFAULT_INTERVAL_IN_SECONDS: u64 = 10;
@@ -79,7 +83,8 @@ fn main() {
 fn display(response: &MeasuredResponse) {
     let status = response.status();
     let duration = response.time;
-    println!("Status: {}, time: {}s", status, duration);
+    let url = response.url();
+    println!("{} -> Status: {}, time: {}s", url, status, duration);
 }
 
 fn request(url: &str) -> MeasuredResponse {
