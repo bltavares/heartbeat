@@ -61,6 +61,7 @@ fn main() {
                                .required(true))
                       .arg(Arg::with_name("interval")
                                .long("interval")
+                               .short("i")
                                .takes_value(true)
                                .value_name("INTERVAL")
                                .validator(validate_interval_argument)
