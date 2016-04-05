@@ -3,10 +3,13 @@ extern crate hyper;
 extern crate stopwatch;
 extern crate time;
 
+use std::time::Duration;
+
+use time::Duration as TimeDuration;
+
 use clap::{App, Arg};
 
 use stopwatch::Stopwatch;
-use time::Duration;
 
 use hyper::Client;
 use hyper::header::Connection;
@@ -15,7 +18,7 @@ use hyper::header::Connection;
 #[derive(Debug)]
 struct MeasuredResponse {
     response: hyper::client::response::Response,
-    time: Duration,
+    time: TimeDuration,
 }
 
 impl MeasuredResponse {
@@ -51,7 +54,7 @@ fn display(response: &MeasuredResponse) {
 
 fn request(url: &str) -> MeasuredResponse {
     let mut client = Client::new();
-    client.set_read_timeout(Some(std::time::Duration::from_secs(10)));
+    client.set_read_timeout(Some(Duration::from_secs(10)));
 
     let request = client.get(url)
                         .header(Connection::close());
