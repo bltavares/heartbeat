@@ -18,6 +18,12 @@ struct MeasuredResponse {
     time: Duration,
 }
 
+impl MeasuredResponse {
+    fn status(&self) -> &hyper::status::StatusCode {
+        &self.response.status
+    }
+}
+
 fn main() {
     let matches = App::new("heartbeat")
                       .version("v0.1.0-beta")
@@ -30,7 +36,13 @@ fn main() {
                       .get_matches();
 
     let measured_response = request(matches.value_of("url").expect("URL not present"));
-    println!("{:?}", measured_response);
+    display(&measured_response);
+}
+
+fn display(response: &MeasuredResponse) {
+    let status = response.status();
+    let duration = response.time;
+    println!("Status: {}, time: {}s", status, duration);
 }
 
 fn request(url: &str) -> MeasuredResponse {
