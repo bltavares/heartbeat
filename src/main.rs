@@ -35,8 +35,11 @@ fn main() {
                                .required(true))
                       .get_matches();
 
-    let measured_response = request(matches.value_of("url").expect("URL not present"));
-    display(&measured_response);
+
+    loop {
+        let measured_response = request(matches.value_of("url").expect("URL not present"));
+        display(&measured_response);
+    }
 }
 
 fn display(response: &MeasuredResponse) {
