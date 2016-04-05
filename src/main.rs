@@ -3,6 +3,7 @@ extern crate hyper;
 extern crate stopwatch;
 extern crate time;
 
+use std::str::FromStr;
 use std::time::Duration;
 
 use time::Duration as TimeDuration;
@@ -27,7 +28,18 @@ impl MeasuredResponse {
     }
 }
 
+const DEFAULT_INTERVAL_IN_SECONDS: u64 = 10;
+
+fn validate_interval_argument(arg: String) -> Result<(), String> {
+    match u64::from_str(&arg) {
+        Ok(_) => Ok(()),
+        Err(_) => Err("The interval argument requires a number".to_string()),
+    }
+}
+
 fn main() {
+    let interval_help_message = format!("The interval in seconds between requests, default to {}",
+                                        DEFAULT_INTERVAL_IN_SECONDS);
     let matches = App::new("heartbeat")
                       .version("v0.1.0-beta")
                       .arg(Arg::with_name("url")
@@ -36,8 +48,16 @@ fn main() {
                                .takes_value(true)
                                .value_name("URL")
                                .required(true))
+                      .arg(Arg::with_name("interval")
+                               .long("interval")
+                               .takes_value(true)
+                               .value_name("INTERVAL")
+                               .validator(validate_interval_argument)
+                               .help(&interval_help_message))
                       .get_matches();
 
+
+    let interval_argument = matches.value_of("interval").and_then(|arg| u64::from_str(arg).ok());
 
     loop {
         let measured_response = request(matches.value_of("url").expect("URL not present"));
