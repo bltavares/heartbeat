@@ -7,6 +7,7 @@ mod measured_response;
 mod summary;
 
 use measured_response::MeasuredResponse;
+use summary::Summary;
 
 use std::str::FromStr;
 use std::time::Duration;
@@ -33,18 +34,27 @@ impl ApplicationConfiguration {
 fn main() {
     let application_configuration = parse_arguments();
 
+    let mut summary = Summary::new();
+
     loop {
         let measured_response = MeasuredResponse::request(&application_configuration.url);
-        display(&measured_response);
-        std::thread::sleep(application_configuration.next_request_in(measured_response.std_time()));
+        let next_tick = application_configuration.next_request_in(measured_response.std_time());
+
+        summary.push(measured_response);
+
+        display(&summary);
+        std::thread::sleep(next_tick);
     }
 }
 
-fn display(response: &MeasuredResponse) {
-    let status = response.status;
-    let duration = response.time;
-    let url = response.url();
-    println!("{} -> Status: {}, time: {}", url, status, duration);
+fn display(summary: &Summary) {
+    println!("Total");
+    println!("Requests: {} - Success: {}/{}% - Failure: {}/{}%",
+             summary.total_requests,
+             summary.total_success(),
+             summary.total_percentual_success(),
+             summary.total_failure(),
+             summary.total_percentual_failure());
 }
 
 fn parse_arguments() -> ApplicationConfiguration {

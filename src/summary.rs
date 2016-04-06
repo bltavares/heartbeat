@@ -1,7 +1,7 @@
 use measured_response::MeasuredResponse;
 
 pub struct Summary {
-    total_requests: u64,
+    pub total_requests: u64,
     total_success: u64,
 }
 
