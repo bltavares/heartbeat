@@ -3,8 +3,8 @@ use std::time::Duration;
 use stopwatch::Stopwatch;
 
 use hyper::Client;
-use hyper::header::Connection;
 use hyper::client::response::Response;
+use hyper::header::Connection;
 use hyper::status::StatusCode;
 
 use time::Duration as TimeDuration;
@@ -22,6 +22,10 @@ impl MeasuredResponse {
 
     pub fn url(&self) -> String {
         self.response.url.serialize()
+    }
+
+    pub fn std_time(&self) -> Duration {
+        self.time.to_std().expect("MeasuredResponse time should never be negative")
     }
 
     pub fn request(url: &str) -> MeasuredResponse {

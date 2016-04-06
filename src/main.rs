@@ -19,13 +19,23 @@ struct ApplicationConfiguration {
     interval: Duration,
 }
 
+impl ApplicationConfiguration {
+    fn next_request_in(&self, time_spent: Duration) -> Duration {
+        if self.interval >= time_spent {
+            self.interval - time_spent
+        } else {
+            Duration::new(0, 0)
+        }
+    }
+}
+
 fn main() {
     let application_configuration = parse_arguments();
 
     loop {
         let measured_response = MeasuredResponse::request(&application_configuration.url);
         display(&measured_response);
-        std::thread::sleep(application_configuration.interval);
+        std::thread::sleep(application_configuration.next_request_in(measured_response.std_time()));
     }
 }
 
@@ -67,4 +77,30 @@ fn parse_arguments() -> ApplicationConfiguration {
         url: cli_arguments.value_of("url").expect("URL not present").to_string(),
         interval: Duration::from_secs(interval_argument.unwrap_or(DEFAULT_INTERVAL_IN_SECONDS)),
     }
+}
+
+#[test]
+fn next_tick_should_remove_the_time_spent_on_the_request() {
+    let configuration = ApplicationConfiguration {
+        url: Default::default(),
+        interval: Duration::from_secs(3),
+    };
+
+    let time_spent = Duration::from_secs(1);
+
+    assert_eq!(configuration.next_request_in(time_spent),
+               Duration::from_secs(2));
+}
+
+#[test]
+fn next_tick_should_be_right_away_when_more_time_is_spent() {
+    let configuration = ApplicationConfiguration {
+        url: Default::default(),
+        interval: Duration::from_secs(3),
+    };
+
+    let time_spent = Duration::from_secs(5);
+
+    assert_eq!(configuration.next_request_in(time_spent),
+               Duration::from_secs(0));
 }
