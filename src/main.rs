@@ -43,7 +43,7 @@ fn display(response: &MeasuredResponse) {
     let status = response.status();
     let duration = response.time;
     let url = response.url();
-    println!("{} -> Status: {}, time: {}s", url, status, duration);
+    println!("{} -> Status: {}, time: {}", url, status, duration);
 }
 
 fn parse_arguments() -> ApplicationConfiguration {
