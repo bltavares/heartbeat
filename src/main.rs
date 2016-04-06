@@ -39,15 +39,9 @@ struct ApplicationConfiguration {
     interval: Duration,
 }
 
-fn validate_interval_argument(arg: String) -> Result<(), String> {
-    match u64::from_str(&arg) {
-        Ok(_) => Ok(()),
-        Err(_) => Err("The interval argument requires a number".to_string()),
-    }
-}
-
 fn main() {
-    let interval_help_message = format!("The interval in seconds between requests, default to {} seconds",
+    let interval_help_message = format!("The interval in seconds between requests, default to {} \
+                                         seconds",
                                         DEFAULT_INTERVAL_IN_SECONDS);
     let matches = App::new("heartbeat")
                       .version("v0.1.0-beta")
@@ -63,12 +57,15 @@ fn main() {
                                .short("i")
                                .takes_value(true)
                                .value_name("INTERVAL")
-                               .validator(validate_interval_argument)
                                .help(&interval_help_message))
                       .get_matches();
 
 
-    let interval_argument = matches.value_of("interval").and_then(|arg| u64::from_str(arg).ok());
+    let interval_argument = matches.value_of("interval")
+                                   .map(|arg| {
+                                       u64::from_str(arg)
+                                           .expect("The interval argument requires a number")
+                                   });
 
     let application_configuration = ApplicationConfiguration {
         url: matches.value_of("url").expect("URL not present").to_string(),
