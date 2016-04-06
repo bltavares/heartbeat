@@ -2,9 +2,9 @@ require 'socket'
 require 'irb'
 require 'irb/completion'
 
-OK = "HTTP/1.1 200 OK\r\n"
-NOT_FOUND = "HTTP/1.1 404 Not Found\r\n"
-ERROR = "HTTP/1.1 500 Internal Server Error\r\n"
+OK = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n"
+NOT_FOUND = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n"
+ERROR = "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 0\r\n\r\n"
 
 @@live = true
 @@response = OK
