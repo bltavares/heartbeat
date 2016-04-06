@@ -2,6 +2,7 @@ extern crate clap;
 extern crate hyper;
 extern crate stopwatch;
 extern crate time;
+extern crate screenprints;
 
 mod measured_response;
 mod summary;
@@ -10,9 +11,12 @@ use measured_response::MeasuredResponse;
 use summary::Summary;
 
 use std::str::FromStr;
+use std::io::{stdout, Write};
 use std::time::Duration;
 
 use clap::{App, Arg};
+
+use screenprints::Printer;
 
 const DEFAULT_INTERVAL_IN_SECONDS: u64 = 10;
 
@@ -35,6 +39,7 @@ fn main() {
     let application_configuration = parse_arguments();
 
     let mut summary = Summary::new();
+    let mut printer = Printer::new(stdout(), Duration::from_millis(10));
 
     loop {
         let measured_response = MeasuredResponse::request(&application_configuration.url);
@@ -42,19 +47,19 @@ fn main() {
 
         summary.push(measured_response);
 
-        display(&summary);
+        display(&summary, &mut printer);
         std::thread::sleep(next_tick);
     }
 }
 
-fn display(summary: &Summary) {
-    println!("Total");
-    println!("Requests: {} - Success: {}/{}% - Failure: {}/{}%",
-             summary.total_requests,
-             summary.total_success(),
-             summary.total_percentual_success(),
-             summary.total_failure(),
-             summary.total_percentual_failure());
+fn display(summary: &Summary, printer: &mut Write) {
+    let _ = write!(printer,
+                   "Total\r\nRequests: {} - Success: {}/{}% - Failure: {}/{}%",
+                   summary.total_requests,
+                   summary.total_success(),
+                   summary.total_percentual_success(),
+                   summary.total_failure(),
+                   summary.total_percentual_failure());
 }
 
 fn parse_arguments() -> ApplicationConfiguration {
