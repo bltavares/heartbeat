@@ -4,6 +4,7 @@ extern crate stopwatch;
 extern crate time;
 
 mod measured_response;
+mod summary;
 
 use measured_response::MeasuredResponse;
 
@@ -40,7 +41,7 @@ fn main() {
 }
 
 fn display(response: &MeasuredResponse) {
-    let status = response.status();
+    let status = response.status;
     let duration = response.time;
     let url = response.url();
     println!("{} -> Status: {}, time: {}", url, status, duration);

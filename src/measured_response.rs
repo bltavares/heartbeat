@@ -3,29 +3,41 @@ use std::time::Duration;
 use stopwatch::Stopwatch;
 
 use hyper::Client;
-use hyper::client::response::Response;
 use hyper::header::Connection;
 use hyper::status::StatusCode;
+use hyper::Url;
 
 use time::Duration as TimeDuration;
 
 #[derive(Debug)]
 pub struct MeasuredResponse {
     pub time: TimeDuration,
-    response: Response,
+    pub status: StatusCode,
+    url: Url,
+}
+
+#[cfg(test)]
+impl Default for MeasuredResponse {
+    fn default() -> MeasuredResponse {
+        MeasuredResponse {
+            time: TimeDuration::zero(),
+            status: StatusCode::Ok,
+            url: Url::parse("http://example.com").unwrap(),
+        }
+    }
 }
 
 impl MeasuredResponse {
-    pub fn status(&self) -> &StatusCode {
-        &self.response.status
-    }
-
     pub fn url(&self) -> String {
-        self.response.url.serialize()
+        self.url.serialize()
     }
 
     pub fn std_time(&self) -> Duration {
         self.time.to_std().expect("MeasuredResponse time should never be negative")
+    }
+
+    pub fn is_success(&self) -> bool {
+        self.status.is_success()
     }
 
     pub fn request(url: &str) -> MeasuredResponse {
@@ -40,8 +52,16 @@ impl MeasuredResponse {
         let duration = stop_watch.elapsed();
 
         MeasuredResponse {
-            response: response,
+            status: response.status,
+            url: response.url.clone(),
             time: duration,
         }
+    }
+
+    #[cfg(test)]
+    pub fn empty_failure() -> MeasuredResponse {
+        let mut response = MeasuredResponse::default();
+        response.status = StatusCode::InternalServerError;
+        response
     }
 }
