@@ -20,6 +20,8 @@ matrix:
           packages: &i686_unknown_linux_gnu
             # Cross compiler and cross compiled C libraries
             - gcc-multilib
+            - libssl-dev:i386
+            - libcrypto++-dev:i386
     - os: osx
       env: TARGET=x86_64-apple-darwin CHANNEL=stable
     - os: linux
