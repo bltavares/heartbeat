@@ -4,9 +4,15 @@ This is a simple interactive response server, where you can change the response 
 
 ## How to use
 
-```
-$ ruby -W0 server.rb
+To start the server, from this folder, execute the following:
 
+```bash
+ruby -W0 server.rb
+```
+
+It will start a REPL, and you can use some of the following methods:
+
+```
 irb> ok
 # will set the server to respond with 200
 irb> error
@@ -17,6 +23,8 @@ irb> dead
 # will just close the connection
 irb> alive
 # will respond again
+irb> speed 1
+# will take 1 second to respond
 irb> exit
 # will exit the application
 ```
