@@ -2,6 +2,7 @@
 name = "heartbeat"
 version = "0.1.0"
 dependencies = [
+ "arrayvec 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "hyper 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "screenprints 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -13,6 +14,15 @@ dependencies = [
 name = "ansi_term"
 version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "arrayvec"
+version = "0.3.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "nodrop 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "odds 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "bitflags"
@@ -141,6 +151,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "nodrop"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "odds 0.2.12 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "num"
 version = "0.1.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -156,6 +174,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "libc 0.2.9 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "odds"
+version = "0.2.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "openssl"

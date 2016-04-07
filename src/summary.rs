@@ -1,8 +1,10 @@
+use arrayvec::ArrayVec;
 use measured_response::MeasuredResponse;
 
 pub struct Summary {
     pub total_requests: u64,
     total_success: u64,
+    last_requests: ArrayVec<[MeasuredResponse; 2]>,
 }
 
 impl Summary {
@@ -10,6 +12,7 @@ impl Summary {
         Summary {
             total_requests: 0,
             total_success: 0,
+            last_requests: ArrayVec::<[MeasuredResponse; 2]>::new(),
         }
     }
 
@@ -37,6 +40,12 @@ impl Summary {
         if response.is_success() {
             self.total_success += 1;
         }
+
+        self.last_requests.insert(0, response);
+    }
+
+    pub fn last_requests(&self) -> &[MeasuredResponse] {
+        &self.last_requests
     }
 }
 
@@ -75,4 +84,16 @@ fn it_should_calculate_the_success_count() {
     summary.push(MeasuredResponse::empty_failure());
     assert_eq!(1, summary.total_success());
     assert_eq!(50.0, summary.total_percentual_success());
+}
+
+#[test]
+fn it_should_store_the_last_few_requests() {
+    let mut summary = Summary::new();
+
+    summary.push(MeasuredResponse::default());
+    summary.push(MeasuredResponse::default());
+    summary.push(MeasuredResponse::empty_failure());
+
+    assert_eq!(summary.last_requests(),
+               &[MeasuredResponse::empty_failure(), MeasuredResponse::default()]);
 }

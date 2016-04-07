@@ -4,6 +4,7 @@ name = "heartbeat"
 version = "0.1.0"
 
 [dependencies]
+arrayvec = "0.3.16"
 clap = "2.2.2"
 hyper = "0.8.0"
 screenprints = "0.1.0"

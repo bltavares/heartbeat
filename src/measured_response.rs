@@ -9,7 +9,7 @@ use hyper::Url;
 
 use time::Duration as TimeDuration;
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct MeasuredResponse {
     pub time: TimeDuration,
     pub status: StatusCode,

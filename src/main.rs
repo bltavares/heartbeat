@@ -3,6 +3,7 @@ extern crate hyper;
 extern crate stopwatch;
 extern crate time;
 extern crate screenprints;
+extern crate arrayvec;
 
 mod measured_response;
 mod summary;
@@ -53,13 +54,23 @@ fn main() {
 }
 
 fn display(summary: &Summary, printer: &mut Write) {
+    let requests = summary.last_requests()
+                          .iter()
+                          .map(|req| {
+                              format!("{} -> Status: {}, Response Time: {}",
+                                      req.url(),
+                                      req.status,
+                                      req.time)
+                          }).collect::<Vec<_>>();
+
     let _ = write!(printer,
-                   "Total\r\nRequests: {} - Success: {}/{:.1}% - Failure: {}/{:.1}%",
+                   "Total\r\nRequests: {} - Success: {}/{:.1}% - Failure: {}/{:.1}%\r\n\r\nLast requests\r\n{}",
                    summary.total_requests,
                    summary.total_success(),
                    summary.total_percentual_success(),
                    summary.total_failure(),
-                   summary.total_percentual_failure());
+                   summary.total_percentual_failure(),
+                   requests.join("\r\n"));
 }
 
 fn parse_arguments() -> ApplicationConfiguration {
