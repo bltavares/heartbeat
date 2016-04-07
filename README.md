@@ -32,6 +32,19 @@ http://localhost:7125/ -> Status: 200 OK, Response Time: PT0.001394655S
 
 ## Installation
 
+### Mac
+
+```
+brew tap bltavares/tap
+brew install heartbeat
+```
+
+### Linux
+
+Download and unpack the latest version from the [Release page](https://github.com/bltavares/heartbeat/releases).
+
+### Manually
+
 Currently you need [Rust](https://www.rust-lang.org/) stable toolchain installed to produce a binary.
 
 To produce a release binary, execute:
@@ -45,8 +58,6 @@ You then can copy the binary to your PATH:
 ```bash
 cp target/release/heartbeat /usr/local/bin
 ```
-
-TODO: Provide pre-compile packages.
 
 ## How to develop
 
