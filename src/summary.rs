@@ -1,7 +1,7 @@
 use arrayvec::ArrayVec;
 use measured_response::MeasuredResponse;
 
-const LAST_REQUEST_STORAGE_SIZE : usize = 10;
+const LAST_REQUEST_STORAGE_SIZE: usize = 10;
 
 pub struct Summary {
     pub total_requests: u64,
@@ -92,10 +92,20 @@ fn it_should_calculate_the_success_count() {
 fn it_should_store_the_last_few_requests() {
     let mut summary = Summary::new();
 
-    summary.push(MeasuredResponse::default());
-    summary.push(MeasuredResponse::default());
+    for _ in 0..10 {
+        summary.push(MeasuredResponse::default());
+    }
     summary.push(MeasuredResponse::empty_failure());
 
     assert_eq!(summary.last_requests(),
-               &[MeasuredResponse::empty_failure(), MeasuredResponse::default()]);
+               &[MeasuredResponse::empty_failure(),
+                 MeasuredResponse::default(),
+                 MeasuredResponse::default(),
+                 MeasuredResponse::default(),
+                 MeasuredResponse::default(),
+                 MeasuredResponse::default(),
+                 MeasuredResponse::default(),
+                 MeasuredResponse::default(),
+                 MeasuredResponse::default(),
+                 MeasuredResponse::default()]);
 }

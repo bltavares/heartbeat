@@ -61,10 +61,12 @@ fn display(summary: &Summary, printer: &mut Write) {
                                       req.url(),
                                       req.status,
                                       req.time)
-                          }).collect::<Vec<_>>();
+                          })
+                          .collect::<Vec<_>>();
 
     let _ = write!(printer,
-                   "Total\r\nRequests: {} - Success: {}/{:.1}% - Failure: {}/{:.1}%\r\n\r\nLast requests\r\n{}",
+                   "Total\r\nRequests: {} - Success: {}/{:.1}% - Failure: {}/{:.1}%\r\n\r\nLast \
+                    requests\r\n{}",
                    summary.total_requests,
                    summary.total_success(),
                    summary.total_percentual_success(),
