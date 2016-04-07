@@ -4,6 +4,7 @@ extern crate stopwatch;
 extern crate time;
 extern crate screenprints;
 extern crate arrayvec;
+extern crate url;
 
 mod measured_response;
 mod summary;
@@ -19,6 +20,8 @@ use clap::{App, Arg};
 
 use screenprints::Printer;
 
+use url::Url;
+
 const DEFAULT_INTERVAL_IN_SECONDS: u64 = 10;
 
 struct ApplicationConfiguration {
@@ -33,6 +36,13 @@ impl ApplicationConfiguration {
         } else {
             Duration::new(0, 0)
         }
+    }
+}
+
+fn url_validator(arg: String) -> Result<(), String> {
+    match Url::parse(&arg) {
+        Ok(_) => Ok(()),
+        Err(_) => Err("The url argument must be complete, specifying the protocol as well. For example: http://example.com".to_string()),
     }
 }
 
@@ -94,6 +104,7 @@ fn parse_arguments() -> ApplicationConfiguration {
                                      .takes_value(true)
                                      .value_name("URL")
                                      .help("The URL to monitor")
+                                     .validator(url_validator)
                                      .required(true))
                             .get_matches();
 
