@@ -1,0 +1,64 @@
+language: generic
+
+env:
+  global:
+    # This will be part of the release tarball
+    - PROJECT_NAME=heartbeat
+
+# AFAICT There are a few ways to set up the build jobs. This one is not the DRYest but I feel is the
+# easiest to reason about.
+# NOTE Make *sure* you don't remove a reference (&foo) if you are going to dereference it (*foo)
+matrix:
+  include:
+    - os: osx
+      env: TARGET=i686-apple-darwin CHANNEL=stable
+    - os: linux
+      env: TARGET=i686-unknown-linux-gnu CHANNEL=stable
+      # Extra packages only for this job
+      addons:
+        apt:
+          packages: &i686_unknown_linux_gnu
+            # Cross compiler and cross compiled C libraries
+            - gcc-multilib
+    - os: osx
+      env: TARGET=x86_64-apple-darwin CHANNEL=stable
+    - os: linux
+      env: TARGET=x86_64-unknown-linux-gnu CHANNEL=stable
+    - os: linux
+      env: TARGET=x86_64-unknown-linux-musl CHANNEL=stable
+
+install:
+  - export PATH="$PATH:~/multirust/bin"
+  - bash ci/install.sh
+
+script:
+  - bash ci/script.sh
+
+before_deploy:
+  - bash ci/before_deploy.sh
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "ICxMkUIseLvzdnE1JCqipkYQFa43pC2Sv44HA3CcI/8bgOHNbRD81d69CnHnbXZeOAdPbX6TiMKGI3UhDYpHS65sH8Z7npr51zwcC7VMHsCzOFvBcA0fWoXyEZ0CZErD6gYrzHZnfm2TDQs0p9z8x69ULY6OaQS3UUhTl6lFHtOdWXT14lirppar80HIq8+d3k8jbsxp71mTqHqcWyGV9T7Aq6wJU0c+0nNM2W6S+nVP1FUOjF4gNrtXrtBKyY6e1vTd7nz7ZGntdQeFFjAqDLOZz+0F3k3+RW2F8WJZA/nPvREFMaBiM1+ULD7JAafrh+c+CBbugPSOYpQfM7Oqn+TCdm3UFpMu4kicJFYuDj8GTw5vDi8tS9T93OfCeAYbGJsAAFv4VJYiRUxrhtm0JksEZpfT5fNo+oqi4SCmQhtz/DIcZ9FYrKEtb9A1XmcoYkmHHHIffXRtiBTQjgwoQoEA5qZPalsS/RBiSkXvlzezu1Hy08Fw+B9avxcmMWtKxzEJq9RPC6ucbBXjA09IxJjkDB3hdSx8ciQsC4QYI/U3Yhp90xzPnpOf1HU6/9xOg9zHIknPu5bB9/tk3CqThSrA8emc5oJJAsk05F/0X/ERZ3I5f3i2werevq+fp7RElzA0yPG1oFrklEPZOD2x/VAYXrrHyWNuX5kKDfjtOGE="
+  file: ${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz
+  # don't delete the artifacts from previous phases
+  skip_cleanup: true
+  # deploy when a new tag is pushed
+  on:
+    # channel to use to produce the release artifacts
+    # NOTE make sure you only release *once* per target
+    condition: $CHANNEL = stable
+    tags: true
+
+branches:
+  only:
+    # Pushes and PR to the master branch
+    - master
+    # IMPORTANT Ruby regex to match tags. Required, or travis won't trigger deploys when a new tag
+    # is pushed. This regex matches semantic versions like v1.2.3-rc4+2016.02.22
+    - /^v\d+\.\d+\.\d+.*$/
+
+notifications:
+  email:
+    on_success: never
