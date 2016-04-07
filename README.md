@@ -34,10 +34,14 @@ http://localhost:7125/ -> Status: 200 OK, Response Time: PT0.001394655S
 
 ### Mac
 
+You can use [homebrew](http://brew.sh/) to install it as a package:
+
 ```
 brew tap bltavares/tap
 brew install heartbeat
 ```
+
+There are pre-compiled binaries available on the [Release page](https://github.com/bltavares/heartbeat/releases) as well.
 
 ### Linux
 
