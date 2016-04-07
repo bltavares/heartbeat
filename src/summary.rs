@@ -1,10 +1,12 @@
 use arrayvec::ArrayVec;
 use measured_response::MeasuredResponse;
 
+const LAST_REQUEST_STORAGE_SIZE : usize = 10;
+
 pub struct Summary {
     pub total_requests: u64,
     total_success: u64,
-    last_requests: ArrayVec<[MeasuredResponse; 2]>,
+    last_requests: ArrayVec<[MeasuredResponse; LAST_REQUEST_STORAGE_SIZE]>,
 }
 
 impl Summary {
@@ -12,7 +14,7 @@ impl Summary {
         Summary {
             total_requests: 0,
             total_success: 0,
-            last_requests: ArrayVec::<[MeasuredResponse; 2]>::new(),
+            last_requests: ArrayVec::<[MeasuredResponse; LAST_REQUEST_STORAGE_SIZE]>::new(),
         }
     }
 
