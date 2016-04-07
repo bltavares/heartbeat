@@ -54,7 +54,7 @@ fn main() {
 
 fn display(summary: &Summary, printer: &mut Write) {
     let _ = write!(printer,
-                   "Total\r\nRequests: {} - Success: {}/{}% - Failure: {}/{}%",
+                   "Total\r\nRequests: {} - Success: {}/{:.1}% - Failure: {}/{:.1}%",
                    summary.total_requests,
                    summary.total_success(),
                    summary.total_percentual_success(),
