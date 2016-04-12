@@ -94,3 +94,12 @@ While it is running, you can change the response using some provided methods [[d
 - Does not work with redirects
 - Application panics when request times out
 - Application panics when the response is malformed
+
+## Roadmap
+
+- Wave 1: Stabilization
+- Wave 2: More metrics calculated
+- Wave 3: Multiple endpoints
+- Wave 4: Response checks
+- Wave 5: Pause/continue and output to file
+- Wave 6: (Maybe?) interactive UI
