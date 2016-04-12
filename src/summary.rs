@@ -9,6 +9,12 @@ pub struct Summary {
     last_requests: ArrayVec<[MeasuredResponse; LAST_REQUEST_STORAGE_SIZE]>,
 }
 
+impl Default for Summary {
+    fn default() -> Summary {
+        Summary::new()
+    }
+}
+
 impl Summary {
     pub fn new() -> Summary {
         Summary {
