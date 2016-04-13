@@ -7,21 +7,37 @@ use hyper::header::Connection;
 use hyper::status::StatusCode;
 use hyper::Url;
 
+use std::fmt;
+
 use time::Duration as TimeDuration;
+
+#[derive(Debug, Eq, PartialEq)]
+pub enum StatusOrError {
+    Status(StatusCode),
+    ResponseError
+}
+
+impl fmt::Display for StatusOrError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            &StatusOrError::Status(status) => status.fmt(f),
+            &StatusOrError::ResponseError => write!(f, "Response error"),
+        }
+    }
+}
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct MeasuredResponse {
     pub time: TimeDuration,
-    pub status: StatusCode,
+    pub status: StatusOrError,
     url: Url,
 }
 
-#[cfg(test)]
 impl Default for MeasuredResponse {
     fn default() -> MeasuredResponse {
         MeasuredResponse {
             time: TimeDuration::zero(),
-            status: StatusCode::Ok,
+            status: StatusOrError::Status(StatusCode::Ok),
             url: Url::parse("http://example.com").unwrap(),
         }
     }
@@ -37,7 +53,11 @@ impl MeasuredResponse {
     }
 
     pub fn is_success(&self) -> bool {
-        self.status.is_success()
+
+        match self.status {
+            StatusOrError::ResponseError => false,
+            StatusOrError::Status(status) => status.is_success(),
+        }
     }
 
     pub fn request(url: &str) -> MeasuredResponse {
@@ -45,23 +65,27 @@ impl MeasuredResponse {
         client.set_read_timeout(Some(Duration::from_secs(10)));
 
         let request = client.get(url)
-                            .header(Connection::close());
+            .header(Connection::close());
 
         let stop_watch = Stopwatch::start_new();
-        let response = request.send().expect("Could not make request");
-        let duration = stop_watch.elapsed();
 
-        MeasuredResponse {
-            status: response.status,
-            url: response.url.clone(),
-            time: duration,
+        match request.send() {
+            Err(_) => MeasuredResponse::empty_failure(),
+            Ok(response) => {
+                let duration = stop_watch.elapsed();
+
+                MeasuredResponse {
+                    status: StatusOrError::Status(response.status),
+                    url: response.url.clone(),
+                    time: duration,
+                }
+            }
         }
     }
 
-    #[cfg(test)]
     pub fn empty_failure() -> MeasuredResponse {
         let mut response = MeasuredResponse::default();
-        response.status = StatusCode::InternalServerError;
+        response.status = StatusOrError::ResponseError;
         response
     }
 }
