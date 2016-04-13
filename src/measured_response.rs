@@ -19,9 +19,9 @@ pub enum StatusOrError {
 
 impl fmt::Display for StatusOrError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            &StatusOrError::Status(status) => status.fmt(f),
-            &StatusOrError::ResponseError => write!(f, "Response error"),
+        match *self {
+            StatusOrError::Status(status) => status.fmt(f),
+            StatusOrError::ResponseError => write!(f, "Response error"),
         }
     }
 }
