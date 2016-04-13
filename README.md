@@ -92,8 +92,6 @@ While it is running, you can change the response using some provided methods [[d
 ## Unresolved and documented flaws
 
 - Does not work with redirects
-- Application panics when request times out
-- Application panics when the response is malformed
 
 ## Roadmap
 
