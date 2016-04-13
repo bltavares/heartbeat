@@ -1,5 +1,6 @@
-use arrayvec::ArrayVec;
 use measured_response::MeasuredResponse;
+
+use arrayvec::ArrayVec;
 
 const LAST_REQUEST_STORAGE_SIZE: usize = 10;
 
