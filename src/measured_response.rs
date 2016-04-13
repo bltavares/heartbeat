@@ -13,7 +13,7 @@ use time::Duration as TimeDuration;
 #[derive(Debug, Eq, PartialEq)]
 pub enum StatusOrError {
     Status(StatusCode),
-    ResponseError
+    ResponseError,
 }
 
 impl fmt::Display for StatusOrError {
@@ -59,12 +59,12 @@ impl MeasuredResponse {
         }
     }
 
-    pub fn request(url: &str) -> MeasuredResponse {
+    pub fn request(url: &str, timeout: Duration) -> MeasuredResponse {
         let mut client = Client::new();
-        client.set_read_timeout(Some(Duration::from_secs(10)));
+        client.set_read_timeout(Some(timeout));
 
         let request = client.get(url)
-            .header(Connection::close());
+                            .header(Connection::close());
 
         let stop_watch = Stopwatch::start_new();
 
