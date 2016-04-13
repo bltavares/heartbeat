@@ -1,13 +1,12 @@
+use std::fmt;
 use std::time::Duration;
 
-use stopwatch::Stopwatch;
-
 use hyper::Client;
+use hyper::Url;
 use hyper::header::Connection;
 use hyper::status::StatusCode;
-use hyper::Url;
 
-use std::fmt;
+use stopwatch::Stopwatch;
 
 use time::Duration as TimeDuration;
 

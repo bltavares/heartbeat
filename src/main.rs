@@ -1,9 +1,9 @@
+extern crate arrayvec;
 extern crate clap;
 extern crate hyper;
+extern crate screenprints;
 extern crate stopwatch;
 extern crate time;
-extern crate screenprints;
-extern crate arrayvec;
 extern crate url;
 
 mod measured_response;
@@ -12,8 +12,8 @@ mod summary;
 use measured_response::MeasuredResponse;
 use summary::Summary;
 
-use std::str::FromStr;
 use std::io::{stdout, Write};
+use std::str::FromStr;
 use std::time::Duration;
 
 use clap::{App, Arg};
