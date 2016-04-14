@@ -5,6 +5,7 @@ use hyper::Client;
 use hyper::Url;
 use hyper::header::Connection;
 use hyper::status::StatusCode;
+use hyper::client::RedirectPolicy;
 
 use stopwatch::Stopwatch;
 
@@ -59,9 +60,10 @@ impl MeasuredResponse {
         }
     }
 
-    pub fn request(url: &str, timeout: Duration) -> MeasuredResponse {
+    pub fn request(url: &str, timeout: Duration, redirect_count: u8) -> MeasuredResponse {
         let mut client = Client::new();
         client.set_read_timeout(Some(timeout));
+        client.set_redirect_policy(RedirectPolicy::FollowCount(redirect_count));
 
         let request = client.get(url)
                             .header(Connection::close());

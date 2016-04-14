@@ -91,8 +91,6 @@ While it is running, you can change the response using some provided methods [[d
 
 ## Unresolved and documented flaws
 
-- Infinite redirects are followed
-
 ## Roadmap
 
 - Wave 1: Stabilization
