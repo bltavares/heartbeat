@@ -91,7 +91,7 @@ While it is running, you can change the response using some provided methods [[d
 
 ## Unresolved and documented flaws
 
-- Does not work with redirects
+- Infinite redirects are followed
 
 ## Roadmap
 
