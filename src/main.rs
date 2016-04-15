@@ -108,7 +108,7 @@ fn parse_arguments() -> ApplicationConfiguration {
                                          DEFAULT_REDIRECT_LIMIT_COUNT);
 
     let cli_arguments = App::new("heartbeat")
-                            .version("v0.1.0-beta")
+                            .version("v0.1.1-beta")
                             .arg(Arg::with_name("interval")
                                      .long("interval")
                                      .short("i")
