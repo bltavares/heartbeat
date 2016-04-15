@@ -6,7 +6,7 @@ version = "0.1.0"
 [dependencies]
 arrayvec = "0.3.16"
 clap = "2.2.2"
-hyper = "0.8.0"
+hyper = { git = "https://github.com/bltavares/hyper", branch = "redirect_count" }
 screenprints = "0.1.0"
 stopwatch = "0.0.6"
 time = "0.1.35"

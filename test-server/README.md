@@ -25,6 +25,10 @@ irb> alive
 # will respond again
 irb> speed 1
 # will take 1 second to respond
+irb> redirect
+# will redirect 1 time and then ok
+irb> redirect 2
+# will redirect 2 times and then ok
 irb> exit
 # will exit the application
 ```
