@@ -73,7 +73,7 @@ impl MeasuredResponse {
         match request.send() {
             Err(_) => MeasuredResponse::empty_failure(),
             Ok(response) => {
-                let duration = stop_watch.elapsed();
+                let duration = TimeDuration::from_std(stop_watch.elapsed()).expect("Could not measure elapsed response time");
 
                 MeasuredResponse {
                     status: StatusOrError::Status(response.status),
