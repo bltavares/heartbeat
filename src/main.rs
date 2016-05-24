@@ -49,7 +49,7 @@ fn url_validator(arg: String) -> Result<(), String> {
         Err(_) => {
             Err("The url argument must be complete, specifying the protocol as well. For example: \
                  http://example.com"
-                    .to_string())
+                .to_string())
         }
     }
 }
@@ -75,14 +75,14 @@ fn main() {
 
 fn display(summary: &Summary, printer: &mut Write) {
     let requests = summary.last_requests()
-                          .iter()
-                          .map(|req| {
-                              format!("{} -> Status: {}, Response Time: {}",
-                                      req.url(),
-                                      req.status,
-                                      req.time)
-                          })
-                          .collect::<Vec<_>>();
+        .iter()
+        .map(|req| {
+            format!("{} -> Status: {}, Response Time: {}",
+                    req.url(),
+                    req.status,
+                    req.time)
+        })
+        .collect::<Vec<_>>();
 
     let _ = write!(printer,
                    "Total\r\nRequests: {} - Success: {}/{:.1}% - Failure: {}/{:.1}%\r\n\r\nLast \
@@ -108,47 +108,44 @@ fn parse_arguments() -> ApplicationConfiguration {
                                          DEFAULT_REDIRECT_LIMIT_COUNT);
 
     let cli_arguments = App::new("heartbeat")
-                            .version("v0.1.1-beta")
-                            .arg(Arg::with_name("interval")
-                                     .long("interval")
-                                     .short("i")
-                                     .takes_value(true)
-                                     .value_name("INTERVAL")
-                                     .help(&interval_help_message))
-                            .arg(Arg::with_name("timeout")
-                                     .long("timeout")
-                                     .short("t")
-                                     .takes_value(true)
-                                     .value_name("TIMEOUT")
-                                     .help(&timeout_help_message))
-                            .arg(Arg::with_name("redirect_limit")
-                                     .long("follow")
-                                     .short("F")
-                                     .takes_value(true)
-                                     .value_name("FOLLOW COUNT")
-                                     .help(&redirect_limit_message))
-                            .arg(Arg::with_name("url")
-                                     .long("url")
-                                     .index(1)
-                                     .takes_value(true)
-                                     .value_name("URL")
-                                     .help("The URL to monitor")
-                                     .validator(url_validator)
-                                     .required(true))
-                            .get_matches();
+        .version("v0.1.1-beta")
+        .arg(Arg::with_name("interval")
+            .long("interval")
+            .short("i")
+            .takes_value(true)
+            .value_name("INTERVAL")
+            .help(&interval_help_message))
+        .arg(Arg::with_name("timeout")
+            .long("timeout")
+            .short("t")
+            .takes_value(true)
+            .value_name("TIMEOUT")
+            .help(&timeout_help_message))
+        .arg(Arg::with_name("redirect_limit")
+            .long("follow")
+            .short("F")
+            .takes_value(true)
+            .value_name("FOLLOW COUNT")
+            .help(&redirect_limit_message))
+        .arg(Arg::with_name("url")
+            .long("url")
+            .index(1)
+            .takes_value(true)
+            .value_name("URL")
+            .help("The URL to monitor")
+            .validator(url_validator)
+            .required(true))
+        .get_matches();
 
 
-    let interval_argument = cli_arguments.value_of("interval").map(|arg| {
-        u64::from_str(arg).expect("The interval argument requires a number")
-    });
+    let interval_argument = cli_arguments.value_of("interval")
+        .map(|arg| u64::from_str(arg).expect("The interval argument requires a number"));
 
-    let timeout_argument = cli_arguments.value_of("timeout").map(|arg| {
-        u64::from_str(arg).expect("The timeout argument requires a number")
-    });
+    let timeout_argument = cli_arguments.value_of("timeout")
+        .map(|arg| u64::from_str(arg).expect("The timeout argument requires a number"));
 
-    let redirect_limit_argument = cli_arguments.value_of("redirect_limit").map(|arg| {
-        u8::from_str(arg).expect("The redirect limit requires a number")
-    });
+    let redirect_limit_argument = cli_arguments.value_of("redirect_limit")
+        .map(|arg| u8::from_str(arg).expect("The redirect limit requires a number"));
 
     ApplicationConfiguration {
         url: cli_arguments.value_of("url").expect("URL not present").to_string(),

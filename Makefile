@@ -20,9 +20,13 @@ install:
 	@-cargo uninstall heartbeat
 	cargo install
 
+format:
+	cargo fmt -- --write-mode overwrite
+
 help:
 	@echo "Available options:"
 	@echo "  - check: Quickly validate all binaries compiles"
+	@echo "  - format: Format the code using cargo fmt"
 	@echo "  - install: Installs the project using cargo"
 	@echo "  - lint: Lint all binaries against clippy"
 	@echo "  - outdated: List outdated dependency information"
