@@ -89,6 +89,9 @@ cargo run -- --interval 0 http://localhost:7125
 
 While it is running, you can change the response using some provided methods [[docs](./test-server/README.md)]
 
+There is a `Makefile` with common tasks used while developing.
+Run `make help` for the list of available tasks.
+
 ## Unresolved and documented flaws
 
 ## Roadmap
