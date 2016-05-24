@@ -66,14 +66,15 @@ impl MeasuredResponse {
         client.set_redirect_policy(RedirectPolicy::FollowCount(redirect_count));
 
         let request = client.get(url)
-                            .header(Connection::close());
+            .header(Connection::close());
 
         let stop_watch = Stopwatch::start_new();
 
         match request.send() {
             Err(_) => MeasuredResponse::empty_failure(),
             Ok(response) => {
-                let duration = TimeDuration::from_std(stop_watch.elapsed()).expect("Could not read elapsed request time");
+                let duration = TimeDuration::from_std(stop_watch.elapsed())
+                    .expect("Could not read elapsed request time");
 
                 MeasuredResponse {
                     status: StatusOrError::Status(response.status),
